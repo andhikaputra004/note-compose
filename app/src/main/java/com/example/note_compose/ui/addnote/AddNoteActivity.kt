@@ -1,8 +1,10 @@
 package com.example.note_compose.ui.addnote
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,9 +21,14 @@ import com.example.note_compose.ui.addnote.component.TextFieldAddNoteContent
 import com.example.note_compose.ui.addnote.component.TextFieldAddNoteTitle
 import com.example.note_compose.ui.theme.DarkPrimaryColor
 import com.example.note_compose.ui.theme.NotecomposeTheme
+import dagger.hilt.android.AndroidEntryPoint
 
 
+@AndroidEntryPoint
 class AddNoteActivity : ComponentActivity() {
+
+    private val viewModel: AddNoteViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -32,6 +39,7 @@ class AddNoteActivity : ComponentActivity() {
                 }
             }
         }
+
     }
 }
 
