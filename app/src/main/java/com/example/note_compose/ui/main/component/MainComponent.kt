@@ -17,6 +17,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import com.example.note_compose.data.Note
 import com.example.note_compose.ui.theme.DarkGrayIconColor
 import com.example.note_compose.ui.theme.DarkSecondTextColor
 import com.example.note_compose.ui.theme.DarkTextColor
@@ -47,7 +48,7 @@ fun TextFieldSearchNote(modifier: Modifier) {
 }
 
 @Composable
-fun ItemNote() {
+fun ItemNote(note: Note?) {
     ConstraintLayout(
         modifier = Modifier
             .padding(start = 12.dp, end = 12.dp, top = 6.dp, bottom = 6.dp)
@@ -56,7 +57,7 @@ fun ItemNote() {
         val (titleLabel, dateCreatedLabel, iconArrowRight) = createRefs()
 
         Text(
-            text = "Shopping List",
+            text = note?.title ?: "",
             fontSize = 18.sp,
             style = TextStyle(color = White),
             modifier = Modifier
@@ -68,7 +69,7 @@ fun ItemNote() {
                 }
         )
 
-        Text(text = "Sept, 11",
+        Text(text = note?.createdDate ?: "",
             fontSize = 14.sp,
             style = TextStyle(color = DarkSecondTextColor),
             modifier = Modifier

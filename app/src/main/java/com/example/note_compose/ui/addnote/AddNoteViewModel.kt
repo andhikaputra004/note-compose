@@ -1,6 +1,6 @@
 package com.example.note_compose.ui.addnote
 
-import androidx.lifecycle.MutableLiveData
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.note_compose.data.Note
@@ -13,6 +13,10 @@ import javax.inject.Inject
 class AddNoteViewModel @Inject constructor(
     private val repository: NoteRepository
 ) : ViewModel() {
+
+    val textFieldTitle = mutableStateOf("")
+
+    val textFieldContent = mutableStateOf("")
 
     fun insertNote(note: Note) {
         viewModelScope.launch {

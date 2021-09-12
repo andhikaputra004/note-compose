@@ -4,18 +4,20 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
@@ -27,25 +29,33 @@ import com.example.note_compose.ui.addnote.AddNoteActivity
 import com.example.note_compose.ui.main.component.ItemNote
 import com.example.note_compose.ui.main.component.TextFieldSearchNote
 import com.example.note_compose.ui.theme.*
+import com.example.note_compose.utils.showToast
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    private val viewModel: MainViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             NotecomposeTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
-                    MainScreen()
+                    MainScreen(viewModel)
                 }
             }
         }
+
     }
 }
 
 @Composable
-fun MainScreen() {
+fun MainScreen(viewModel: MainViewModel) {
     val context = LocalContext.current
-    val noteItems = listOf<String>("", "", "")
+    val noteItems by viewModel.getNote().observeAsState()
+
     Scaffold(modifier = Modifier.fillMaxSize(), floatingActionButton = {
         FloatingActionButton(onClick = {
             context.startActivity(
@@ -87,9 +97,14 @@ fun MainScreen() {
             )
 
             LazyColumn(content = {
-                items(noteItems) {
-                    ItemNote()
+                items(noteItems?.size ?: 0) {
+                    val note = noteItems?.get(it)
+                    ItemNote(note)
                     Divider(color = DarkGrayIconColor, thickness = 1.dp)
+                    if (note?.title?.isEmpty() == true && note.content.isEmpty()){
+                        viewModel.deleteNote(note)
+                        context.showToast("Empty note discarded")
+                    }
                 }
             }, modifier = Modifier
                 .padding(start = 24.dp, end = 24.dp)
@@ -109,6 +124,6 @@ fun MainScreen() {
 @Composable
 fun DefaultPreview() {
     NotecomposeTheme {
-        MainScreen()
+//        MainScreen(null)
     }
 }
