@@ -1,10 +1,8 @@
 package com.example.note_compose.ui.main
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,17 +23,19 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
-import com.example.note_compose.ui.addnote.AddNoteActivity
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import com.example.note_compose.ui.NoteNavigation
 import com.example.note_compose.ui.main.component.ItemNote
 import com.example.note_compose.ui.main.component.TextFieldSearchNote
 import com.example.note_compose.ui.theme.*
+import com.example.note_compose.utils.NavConstant.ADD_NOTE
 import com.example.note_compose.utils.showToast
 import dagger.hilt.android.AndroidEntryPoint
 
+
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
-    private val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +43,7 @@ class MainActivity : ComponentActivity() {
             NotecomposeTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
-                    MainScreen(viewModel)
+                    NoteNavigation()
                 }
             }
         }
@@ -52,18 +52,14 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun MainScreen(viewModel: MainViewModel) {
+fun MainScreen(navController: NavController?) {
     val context = LocalContext.current
+    val viewModel: MainViewModel = hiltViewModel()
     val noteItems by viewModel.getNote().observeAsState()
 
     Scaffold(modifier = Modifier.fillMaxSize(), floatingActionButton = {
         FloatingActionButton(onClick = {
-            context.startActivity(
-                Intent(
-                    context,
-                    AddNoteActivity::class.java
-                )
-            )
+            navController?.navigate(ADD_NOTE)
         }, backgroundColor = Purple) {
             Icon(imageVector = Icons.Outlined.Add, contentDescription = null, tint = White)
         }
@@ -101,7 +97,7 @@ fun MainScreen(viewModel: MainViewModel) {
                     val note = noteItems?.get(it)
                     ItemNote(note)
                     Divider(color = DarkGrayIconColor, thickness = 1.dp)
-                    if (note?.title?.isEmpty() == true && note.content.isEmpty()){
+                    if (note?.title?.isEmpty() == true && note.content.isEmpty()) {
                         viewModel.deleteNote(note)
                         context.showToast("Empty note discarded")
                     }
@@ -124,6 +120,6 @@ fun MainScreen(viewModel: MainViewModel) {
 @Composable
 fun DefaultPreview() {
     NotecomposeTheme {
-//        MainScreen(null)
+        MainScreen(null)
     }
 }

@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    compileSdk 30
+    compileSdk 31
 
     defaultConfig {
         applicationId "com.example.note_compose"
@@ -64,6 +64,9 @@ dependencies {
     implementation 'androidx.activity:activity-compose:1.3.1'
     implementation "androidx.compose.runtime:runtime-livedata:1.0.2"
     implementation "androidx.constraintlayout:constraintlayout-compose:1.0.0-beta02"
+    implementation "androidx.navigation:navigation-compose:2.4.0-alpha08"
+    implementation "com.google.accompanist:accompanist-navigation-animation:0.16.0"
+
 
     //ROOM
     def room_version = "2.3.0"
@@ -80,6 +83,7 @@ dependencies {
     //DAGGER
     implementation "com.google.dagger:hilt-android:2.37"
     implementation 'androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03'
+    implementation 'androidx.hilt:hilt-navigation-compose:1.0.0-alpha03'
     kapt "com.google.dagger:hilt-android-compiler:2.37"
 
 
